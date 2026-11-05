@@ -178,9 +178,9 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .lvl{position:absolute;inset:0;-webkit-mask:var(--m) 0 0/100% 100% no-repeat;mask:var(--m) 0 0/100% 100% no-repeat;pointer-events:none}
 .lvl i{position:absolute;left:0;right:0;bottom:var(--b);height:var(--h0)}
 .lvl i::before{content:"";position:absolute;left:0;right:0;top:0;height:5px;background:rgba(255,255,255,.55)}
-.lvC{--m:url(ly2/tankC.png);--b:58.95%;--h0:22%}
+.lvC{--m:url(ly2/tankC.png);--b:60.26%;--h0:22%}
 .lvC i{background:linear-gradient(var(--water),var(--turf-lite))}
-.lvN{--m:url(ly2/tankNear.png);--b:58.62%;--h0:6%}
+.lvN{--m:url(ly2/tankNear.png);--b:59.72%;--h0:6%}
 .lvN i{background:linear-gradient(var(--algae),var(--algae-dark))}
 #stage[data-step="1"] .lvC i{animation:lvCdrain 4s ease-in-out infinite}
 #stage[data-step="4"] .lvC i{animation:lvCfill 4s ease-in-out infinite}
@@ -270,6 +270,55 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .explain p{color:var(--muted);max-width:56ch;text-wrap:pretty}
 #stage[data-step="0"] .ly:not(.shell){opacity:1}
 
+
+/* Proceso: vistas giradas (tracción y recirculación) */
+.alt{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .35s}
+#stage[data-alt] .alt{opacity:1}
+#stage[data-alt] .mach{opacity:0;transition:opacity .35s}
+#stage .mach{transition:opacity .35s}
+#stage[data-step="5"] .mach{animation:none}
+.altm{position:absolute;inset:0;transform-origin:50% 87%}
+.altm canvas,.altm svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
+.altfx{opacity:0;transition:opacity .5s}
+.alt.done .altfx{opacity:1}
+.altfx .g-trac,.altfx .g-rec{display:none}
+.alt[data-v="trac"] .g-trac,.alt[data-v="rec"] .g-rec{display:inline}
+.stage{position:relative}
+.gwrap{position:absolute;inset:0;overflow:hidden;contain:paint;border-radius:inherit;pointer-events:none}
+.stage>.rm{position:relative}
+.ground{position:absolute;left:-60%;right:-60%;top:42%;bottom:-110%;transform:perspective(600px) rotateX(55deg);transform-origin:50% 0;opacity:0;transition:opacity .6s;
+ background:linear-gradient(rgba(10,30,70,.25),rgba(10,30,70,0) 30%),linear-gradient(rgba(40,90,200,.18),rgba(40,90,200,.18)),url(img/turf_tile2.jpg) 50% 0/260px 166px repeat}
+.horizon{position:absolute;left:0;right:0;top:calc(42% - 60px);height:90px;background:linear-gradient(transparent,var(--surface-2) 65%,transparent);opacity:0;transition:opacity .6s}
+#stage[data-alt="trac"] .ground{opacity:1}#stage[data-alt="trac"] .horizon{opacity:1}
+.alt[data-v="trac"].done .altm{animation:recede 16s cubic-bezier(.45,0,.7,1) .6s infinite}
+@keyframes recede{0%{transform:none;opacity:1}78%{transform:translateY(-45%) scale(.2);opacity:1}86%{transform:translateY(-47%) scale(.17);opacity:0}87%{transform:none;opacity:0}100%{transform:none;opacity:1}}
+.ch-run{stroke:#2a3238;stroke-width:9;stroke-linecap:round}
+.ch-link{stroke:var(--metal);stroke-width:5;stroke-dasharray:4 5;animation:chain .45s linear infinite}
+@keyframes chain{to{stroke-dashoffset:-18}}
+.spk{fill:var(--metal-dk);stroke:var(--metal-hi);stroke-width:1.5}
+.mot{fill:rgba(48,155,165,.12);stroke:var(--teal-hi);stroke-width:3;animation:motp 1.2s ease-in-out infinite}
+@keyframes motp{50%{fill:rgba(48,155,165,.28)}}
+.spinr{fill:none;stroke:var(--teal-hi);stroke-width:4;stroke-linecap:round}
+.spinr.go{animation:spin .8s linear infinite}
+.ftag rect{fill:var(--surface-2);stroke:var(--line-hi);stroke-width:1.5}
+.ftag text{font-family:var(--f-text);font-size:19px;font-weight:600;fill:var(--fg);text-anchor:middle;dominant-baseline:central}
+.ftag text tspan{font-family:var(--f-mono);font-size:14px;font-weight:400;fill:var(--teal)}
+.ftag line{stroke:var(--fg);stroke-width:1.5}
+.tk{fill:rgba(255,255,255,.35);stroke:var(--metal-dk);stroke-width:3}
+.tkw{transition:none}
+.tkw.cl{fill:var(--water);opacity:.85}.tkw.dt{fill:var(--algae);opacity:.9}.tkw.fl{fill:var(--filtered);opacity:.9}
+.rp{fill:none;stroke-width:10;stroke-linecap:round;stroke-linejoin:round;stroke:var(--line-hi)}
+.rp.on.dirty{stroke:var(--algae)}.rp.on.clean{stroke:var(--water)}.rp.on.filt{stroke:var(--filtered)}
+.rf{fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:3 13;opacity:0}
+.rf.on{opacity:1;animation:flow .8s linear infinite}
+.pump{fill:var(--surface-2);stroke:var(--metal-dk);stroke-width:3}
+.pump.on{stroke:var(--teal-hi);fill:#eaf6f7}
+.filtr{fill:var(--filtered);stroke:var(--metal-dk);stroke-width:3}
+.drops line{stroke:var(--water);stroke-width:3;stroke-dasharray:4 10;opacity:0}
+.drops.on line{opacity:1;animation:drip .55s linear infinite}
+.rstat{font-family:var(--f-text);font-size:22px;font-weight:600;fill:var(--fg)}
+.rstat tspan{font-family:var(--f-mono);font-size:16px;fill:var(--teal);font-weight:400}
+
 /* Recirculación, vista superior */
 #recirculacion{height:460vh;background:var(--surface)}
 .tbox{position:relative;width:min(100%,calc((100svh - 150px) * 1.667));aspect-ratio:1000/600;max-width:100%}
@@ -304,7 +353,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .legend i{display:inline-block;width:18px;height:6px;border-radius:3px;margin-right:6px;vertical-align:middle}
 
 .cmp{position:relative;aspect-ratio:2/1;max-width:100%;border-radius:24px;overflow:hidden;border:1px solid var(--line);--pos:50%}
-.cmp canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.cmp img{position:absolute;inset:0;width:100%;height:100%;display:block;object-fit:cover;user-select:none;-webkit-user-drag:none}
 #turf-dirty{clip-path:inset(0 0 0 var(--pos))}
 .cmp .handle{position:absolute;top:0;bottom:0;left:var(--pos);width:2px;background:var(--chalk);transform:translateX(-1px);pointer-events:none}
 .cmp .handle::after{content:"◂ ▸";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:var(--chalk);color:var(--fg);font-size:13px;border-radius:999px;padding:8px 12px;white-space:nowrap}
@@ -353,15 +402,15 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 
 #ficha{background:var(--surface)}
 #mercado{background:var(--surface)}
-.mk-top{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:clamp(16px,3vw,36px);margin-bottom:clamp(28px,4vw,44px)}
+.mk-top{display:grid;grid-template-columns:minmax(0,1fr);gap:clamp(16px,3vw,36px);margin-top:clamp(36px,5vw,56px);padding-top:18px;border-top:1px solid var(--line)}
 .mk-top .k{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
 .mk-chips{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px}
 .mk-chips li{background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:8px 14px;font-size:15px;font-weight:600}
 .mk-models{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;counter-reset:m}
-.mk-models li{background:var(--surface-2);border:1px solid var(--line);border-radius:16px;padding:14px;display:grid;gap:4px;align-content:start;counter-increment:m}
+.mk-models li{background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:clamp(16px,2vw,24px);display:grid;gap:4px;align-content:start;counter-increment:m}
 .mk-models li::before{content:counter(m,decimal-leading-zero);font-family:var(--f-mono);font-size:11px;color:var(--teal)}
-.mk-models b{font-size:16px;font-variation-settings:"wdth" 108}
-.mk-models span{font-size:13px;color:var(--muted)}
+.mk-models b{font-size:clamp(18px,1.7vw,22px);font-variation-settings:"wdth" 108}
+.mk-models span{font-size:15px;color:var(--muted)}
 .mk-table{border-top:2px solid var(--fg)}
 .mk-row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr) minmax(0,1.4fr);gap:20px;padding:16px 0;border-bottom:1px solid var(--line);align-items:start}
 .mk-row>span{min-width:0}
@@ -374,6 +423,34 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mk-us>span:nth-child(2){font-weight:600}
 .mk-us .yes{color:var(--teal);font-weight:700}
 @media (max-width:820px){.mk-top{grid-template-columns:minmax(0,1fr)}.mk-models{grid-template-columns:repeat(2,minmax(0,1fr))}.mk-row{grid-template-columns:minmax(0,1fr);gap:6px}.mk-h{display:none}.mk-row .no::before{content:"No tiene: ";font-weight:600}.mk-us .yes{display:none}}
+
+.dg{border-top:2px solid var(--fg);padding-top:18px}
+.dg-k{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:6px}
+.dg-svg{width:100%;height:auto;display:block}
+.dg-link{fill:none;stroke:var(--teal-hi);stroke-width:3;stroke-linejoin:round}
+.dg-halo{fill:none;stroke:var(--surface);stroke-width:11;stroke-linejoin:round}
+.dg-dot{fill:var(--teal-hi);stroke:#fff;stroke-width:3}
+.dg-tree{fill:none;stroke:var(--muted);stroke-width:2}
+.dg-arr{fill:none;stroke:var(--muted);stroke-width:2}
+.dg-hub{fill:none;stroke:var(--teal-hi);stroke-width:5}
+.dg-sys rect{fill:var(--fg)}.dg-sys text{fill:#fff;font-family:var(--f-text);font-size:22px;font-weight:600;text-anchor:middle;dominant-baseline:central}
+.dg-sys.own rect{fill:var(--teal)}
+.dg-comp rect{fill:var(--surface-2);stroke:var(--line-hi);stroke-width:1.5}.dg-comp text{fill:var(--fg);font-family:var(--f-text);font-size:19px;text-anchor:middle;dominant-baseline:central}
+.dg-own text{fill:var(--teal);font-family:var(--f-mono);font-size:17px;letter-spacing:.08em;text-transform:uppercase}
+.dg-list{display:none;list-style:none;margin:8px 0 0;padding:0}
+.dg-list li{display:grid;gap:4px;padding:12px 0;border-bottom:1px solid var(--line)}
+.dg-list b{font-size:16px}.dg-list b.own{color:var(--teal)}.dg-list span{color:var(--muted);font-size:14px}
+.dg-note{margin-top:14px;font-family:var(--f-mono);font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);line-height:1.6}
+.dg-img{display:none}
+@media (max-width:720px){.dg-svg{display:none}.dg-list{display:block}.dg-img{display:block;width:min(86vw,340px);height:auto;margin:14px auto 4px}}
+.mk-specs{margin-top:clamp(20px,3vw,32px)}
+.mk-specs .k{display:block;font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal);margin-bottom:12px}
+.mk-sg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
+.mk-sg div{display:grid;gap:6px;align-content:start;padding:clamp(16px,2vw,24px);border-radius:20px;background:var(--fg);color:#fff}
+.mk-sg b{font-size:clamp(30px,3.4vw,44px);line-height:1;font-weight:780;font-variation-settings:"wdth" 114}
+.mk-sg small{font-size:.45em;font-weight:500;color:var(--teal-hi)}
+.mk-sg span{font-size:15px;color:#c9d0d3}
+@media (max-width:820px){.mk-sg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 #fea{background:var(--surface)}
 .fea-tabs{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px;background:#e1e4e5;border-radius:16px;padding:4px;margin-bottom:24px;max-width:100%}
 .fea-tabs button{font:inherit;border:0;border-radius:12px;padding:10px 16px;background:transparent;color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;display:grid;gap:2px;text-align:left}
@@ -519,11 +596,13 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
       <p class="eyebrow">Mercado</p>
       <h2>Para quién es Turfo.</h2>
     </div>
+    <div class="dg" role="figure" aria-label="Referentes del mercado">
+      <span class="k dg-k">Referentes del mercado · qué sistemas de Turfo tiene cada uno</span>
+      <svg class="dg-svg" viewBox="0 0 1240 640" role="img" aria-label="Sistemas de Turfo y qué referentes del mercado comparten cada uno"><defs><marker id="dgA" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--muted)"/></marker></defs><image href="img/render_cut.webp" x="385" y="60" width="470" height="447"/><path class="dg-link" d="M306,70 L547,116"/><circle class="dg-dot" cx="547" cy="116" r="7"/><path class="dg-link" d="M182,380 H204 V552 H644 V438"/><circle class="dg-dot" cx="644" cy="438" r="7"/><path class="dg-link" d="M959,70 L764,248"/><circle class="dg-dot" cx="764" cy="248" r="7"/><path class="dg-link" d="M1046,250 L818,338"/><circle class="dg-dot" cx="818" cy="338" r="7"/><path class="dg-link" d="M910,420 H886 V552 H709 V438"/><circle class="dg-dot" cx="709" cy="438" r="7"/><g class="dg-sys"><rect x="20" y="45" width="286" height="50" rx="25"/><text x="163" y="70">Navegación autónoma</text></g><path class="dg-tree" d="M44,95 V238"/><path class="dg-arr" d="M44,134 H66" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="72" y="113" width="120" height="42" rx="21"/><text x="132" y="134">Buky One</text></g><path class="dg-arr" d="M44,186 H66" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="72" y="165" width="201" height="42" rx="21"/><text x="173" y="186">TurfRouter TR500</text></g><path class="dg-arr" d="M44,238 H66" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="72" y="217" width="171" height="42" rx="21"/><text x="157" y="238">Turf Tank Two</text></g><g class="dg-sys"><rect x="20" y="355" width="162" height="50" rx="25"/><text x="101" y="380">Aspersión</text></g><path class="dg-tree" d="M44,405 V444"/><path class="dg-arr" d="M44,444 H66" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="72" y="423" width="69" height="42" rx="21"/><text x="106" y="444">GKB</text></g><g class="dg-sys own"><rect x="959" y="45" width="261" height="50" rx="25"/><text x="1090" y="70">Reciclaje de agua</text></g><g class="dg-own"><text x="1090" y="118" text-anchor="middle">Solo Turfo</text></g><g class="dg-sys"><rect x="1046" y="225" width="174" height="50" rx="25"/><text x="1133" y="250">Aspiración</text></g><path class="dg-tree" d="M1196,275 V314"/><path class="dg-arr" d="M1196,314 H1174" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="1099" y="293" width="69" height="42" rx="21"/><text x="1134" y="314">GKB</text></g><g class="dg-sys"><rect x="910" y="395" width="310" height="50" rx="25"/><text x="1065" y="420">Rodillos de cepillado</text></g><path class="dg-tree" d="M1196,445 V588"/><path class="dg-arr" d="M1196,484 H1174" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="1048" y="463" width="120" height="42" rx="21"/><text x="1108" y="484">Buky One</text></g><path class="dg-arr" d="M1196,536 H1174" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="967" y="515" width="201" height="42" rx="21"/><text x="1067" y="536">TurfRouter TR500</text></g><path class="dg-arr" d="M1196,588 H1174" marker-end="url(#dgA)"/><g class="dg-comp"><rect x="1099" y="567" width="69" height="42" rx="21"/><text x="1134" y="588">GKB</text></g><svg x="555" y="604" width="130" height="22" viewBox="0 0 1063 179.3"><path class="lg-t" d="M99.3,60.7c8.3-12.4,16.1-24,24.2-36.2-10.8,10.5-21.3,20.6-32.2,31.2C61,46,30.5,36.1,0,26.3c0-.6,0-1.1,0-1.7C47.5,16.5,95,8.3,143.1,0v179c-.2,0-.4.2-.6.3-14.5-39.6-28.9-79.2-43.2-118.5Z"/><path class="lg-t" d="M156,0c45.8,8.3,90.6,16.5,135.5,24.7,0,.5,0,.9,0,1.4-30.1,9.3-60.1,19-90.1,29-9.9-10-18.3-20.7-27.5-30.6-.4.2-.7.5-1.1.7,6.8,11.6,13.5,23.3,20.4,35.1-12.2,31.3-24.4,62.6-36.6,93.8l-.7-.2V0Z"/><path class="lg-w" d="M914,45.5c-2.4,6.3-4.3,11.9-6.7,17.1-2.7,5.9-3.9,11.8-3.8,18.4.3,16.2,0,32.3,0,48.5,0,2-.2,4,.7,6.4h123.9v-61.1h-116c3-10.4,6.8-19.3,10-28.1,2.9-2,5.8-1.8,8.6-1.8,36.3-.1,72.7,0,109-.3,11,0,23.6,7.6,23.1,23.1-.7,20.5-.3,41-.1,61.5,0,6.3-1.5,11.8-5.8,16.5-1.3,1.5-2.6,3.1-3.9,4.6-6.9,7.7-14.9,11.1-25.9,10.9-42.1-.7-84.3-.5-126.5,0-8.3,0-14.8-2-20.8-7.5-6.6-6-10.7-12.8-10.5-22.1.4-14.7.2-29.3,0-44,0-6.3,2.2-11.2,7.1-15.2,8.5-7,16.8-14.2,25.3-21.2,3.2-2.6,6.4-5.1,12.1-5.5Z"/><path class="lg-w" d="M479.3,88.6h146.4c1.5-5.4.4-10.7,0-17.1h-147.8c-.6-9.2-.4-17.5-.2-25.4,1.9-1.7,3.8-1.4,5.6-1.4,51.2,0,102.3,0,153.5,0,5.9,0,11.2,1.6,15.8,5.3,4.4,3.5,7.1,7.9,7.1,13.7,0,10.3.3,20.7,0,31-.3,12.4-14.4,25.8-26.7,25.8-16.1,0-32.3,0-48.4,0-.2.3-.3.7-.5,1,18.7,12.8,37.5,25.7,56.3,38.6-1.3,1.9-2.8,1.4-4,1.4-14.5,0-29,0-43.5,0-2.7,0-5.2-.5-7.5-2.1-34.3-22.8-68.5-45.5-102.8-68.3-.8-.5-1.5-1.2-3.2-2.5Z"/><path class="lg-w" d="M253.7,74.3c10.8-9.5,21.3-18.9,31.9-28.2.4,0,.7.2,1.1.3v89.9h120.2c1.5-2,1-4.1,1-6,0-17.3,0-34.6,0-52,0-3.2.9-5.6,3.4-7.8,9-7.7,17.8-15.6,26.7-23.4.7-.6,1.3-1.6,2.6-1.3,1.1,1.3.6,2.8.6,4.3.2,25.3,0,50.6.6,75.9.2,10-2.8,17.8-10,24.4-3.4,3.2-7,6.2-10.7,9-2.1,1.6-4.4,2.2-7,2.2-45.5,0-90.9,0-136.4,0-2.6,0-4.9-.7-7-2.1-4.5-3-8.5-6.4-11.9-10.6-2.8-3.4-4.9-7.3-5-11.8-.1-20.8,0-41.6,0-62.9Z"/><path class="lg-w" d="M865.8,46.1c-10,9.1-20.1,18.2-30.1,27.3h-138.8c-.6-9.5-.4-18.5,0-28.2h168.6c.1.3.3.6.4.9Z"/><path class="lg-w" d="M813.5,93.9c-7.6,7-15.3,13.4-22.2,20.6-5,5.2-10.5,6.6-17.4,6.3-12.6-.4-25.3-.1-38-.1-1.6,0-3.3,0-5.8,0v40.3h-33.2v-81.9c5.3,1.5,9.5,4.4,13.5,7.1,7.5,5,15.3,6.8,24.4,6.6,24.1-.5,48.3-.1,72.4,0,1.8,0,3.7-.4,6.2,1.1Z"/></svg></svg>
+      <img class="dg-img" src="img/render_cut.webp" alt="Render de Turfo" width="900" height="856" loading="lazy"><ul class="dg-list"><li><b>Navegación autónoma</b><span>Buky One · TurfRouter TR500 · Turf Tank Two</span></li><li><b>Rodillos de cepillado</b><span>Buky One · TurfRouter TR500 · GKB</span></li><li><b>Aspersión</b><span>GKB</span></li><li><b>Aspiración</b><span>GKB</span></li><li><b class="own">Reciclaje de agua</b><span>Solo Turfo</span></li></ul>
+      <p class="dg-note">Turfo es la única que reúne los cinco sistemas en una sola máquina y sin operador.</p>
+    </div>
     <div class="mk-top">
-      <div class="mk-user">
-        <span class="k">Usuario principal</span>
-        <ul class="mk-chips"><li>Clubes deportivos</li><li>Colegios con infraestructura deportiva</li><li>Polideportivos municipales</li></ul>
-      </div>
       <div class="mk-biz">
         <span class="k">Modelos de negocio que proyectamos</span>
         <ol class="mk-models">
@@ -533,14 +612,15 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
           <li><b>Servicio de limpieza</b><span>como empresa tercerizada</span></li>
         </ol>
       </div>
-    </div>
-    <div class="mk-table" role="table" aria-label="Referentes del mercado">
-      <div class="mk-row mk-h" role="row"><span role="columnheader">Referentes del mercado</span><span role="columnheader">Lo que tiene</span><span role="columnheader">Lo que no tiene</span></div>
-      <div class="mk-row" role="row"><span role="cell"><b>Buky One</b><small>Robot europeo</small></span><span role="cell">Navegación autónoma</span><span role="cell" class="no">No trabaja con agua, no limpia en profundidad ni recicla agua</span></div>
-      <div class="mk-row" role="row"><span role="cell"><b>TurfRouter TR500</b><small>Robot europeo</small></span><span role="cell">Navegación autónoma</span><span role="cell" class="no">No trabaja con agua, no limpia en profundidad ni recicla agua</span></div>
-      <div class="mk-row" role="row"><span role="cell"><b>GKB</b><small>Acoplada a tractor</small></span><span role="cell">Limpieza profunda</span><span role="cell" class="no">No es autónoma (requiere operador y tractor), daña la base, no hidrata ni recicla agua</span></div>
-      <div class="mk-row" role="row"><span role="cell"><b>Turf Tank Two</b></span><span role="cell">Navegación GPS validada en superficies deportivas, marcado de líneas</span><span role="cell" class="no">Solo marca líneas: no limpia, no hidrata, no elimina algas ni recicla agua</span></div>
-      <div class="mk-row mk-us" role="row"><span role="cell"><svg class="logo mk-svg" viewBox="0 0 1063 179.3" role="img" aria-label="Turfo"><path class="lg-t" d="M99.3,60.7c8.3-12.4,16.1-24,24.2-36.2-10.8,10.5-21.3,20.6-32.2,31.2C61,46,30.5,36.1,0,26.3c0-.6,0-1.1,0-1.7C47.5,16.5,95,8.3,143.1,0v179c-.2,0-.4.2-.6.3-14.5-39.6-28.9-79.2-43.2-118.5Z"/><path class="lg-t" d="M156,0c45.8,8.3,90.6,16.5,135.5,24.7,0,.5,0,.9,0,1.4-30.1,9.3-60.1,19-90.1,29-9.9-10-18.3-20.7-27.5-30.6-.4.2-.7.5-1.1.7,6.8,11.6,13.5,23.3,20.4,35.1-12.2,31.3-24.4,62.6-36.6,93.8l-.7-.2V0Z"/><path class="lg-w" d="M914,45.5c-2.4,6.3-4.3,11.9-6.7,17.1-2.7,5.9-3.9,11.8-3.8,18.4.3,16.2,0,32.3,0,48.5,0,2-.2,4,.7,6.4h123.9v-61.1h-116c3-10.4,6.8-19.3,10-28.1,2.9-2,5.8-1.8,8.6-1.8,36.3-.1,72.7,0,109-.3,11,0,23.6,7.6,23.1,23.1-.7,20.5-.3,41-.1,61.5,0,6.3-1.5,11.8-5.8,16.5-1.3,1.5-2.6,3.1-3.9,4.6-6.9,7.7-14.9,11.1-25.9,10.9-42.1-.7-84.3-.5-126.5,0-8.3,0-14.8-2-20.8-7.5-6.6-6-10.7-12.8-10.5-22.1.4-14.7.2-29.3,0-44,0-6.3,2.2-11.2,7.1-15.2,8.5-7,16.8-14.2,25.3-21.2,3.2-2.6,6.4-5.1,12.1-5.5Z"/><path class="lg-w" d="M479.3,88.6h146.4c1.5-5.4.4-10.7,0-17.1h-147.8c-.6-9.2-.4-17.5-.2-25.4,1.9-1.7,3.8-1.4,5.6-1.4,51.2,0,102.3,0,153.5,0,5.9,0,11.2,1.6,15.8,5.3,4.4,3.5,7.1,7.9,7.1,13.7,0,10.3.3,20.7,0,31-.3,12.4-14.4,25.8-26.7,25.8-16.1,0-32.3,0-48.4,0-.2.3-.3.7-.5,1,18.7,12.8,37.5,25.7,56.3,38.6-1.3,1.9-2.8,1.4-4,1.4-14.5,0-29,0-43.5,0-2.7,0-5.2-.5-7.5-2.1-34.3-22.8-68.5-45.5-102.8-68.3-.8-.5-1.5-1.2-3.2-2.5Z"/><path class="lg-w" d="M253.7,74.3c10.8-9.5,21.3-18.9,31.9-28.2.4,0,.7.2,1.1.3v89.9h120.2c1.5-2,1-4.1,1-6,0-17.3,0-34.6,0-52,0-3.2.9-5.6,3.4-7.8,9-7.7,17.8-15.6,26.7-23.4.7-.6,1.3-1.6,2.6-1.3,1.1,1.3.6,2.8.6,4.3.2,25.3,0,50.6.6,75.9.2,10-2.8,17.8-10,24.4-3.4,3.2-7,6.2-10.7,9-2.1,1.6-4.4,2.2-7,2.2-45.5,0-90.9,0-136.4,0-2.6,0-4.9-.7-7-2.1-4.5-3-8.5-6.4-11.9-10.6-2.8-3.4-4.9-7.3-5-11.8-.1-20.8,0-41.6,0-62.9Z"/><path class="lg-w" d="M865.8,46.1c-10,9.1-20.1,18.2-30.1,27.3h-138.8c-.6-9.5-.4-18.5,0-28.2h168.6c.1.3.3.6.4.9Z"/><path class="lg-w" d="M813.5,93.9c-7.6,7-15.3,13.4-22.2,20.6-5,5.2-10.5,6.6-17.4,6.3-12.6-.4-25.3-.1-38-.1-1.6,0-3.3,0-5.8,0v40.3h-33.2v-81.9c5.3,1.5,9.5,4.4,13.5,7.1,7.5,5,15.3,6.8,24.4,6.6,24.1-.5,48.3-.1,72.4,0,1.8,0,3.7-.4,6.2,1.1Z"/></svg></span><span role="cell">Navegación autónoma, limpieza, hidratación del campo, eliminación de algas y reciclaje del agua, todo integrado en una sola máquina y sin operador</span><span role="cell" class="yes">—</span></div>
+      <div class="mk-specs">
+        <span class="k">Especificaciones · anteproyecto</span>
+        <div class="mk-sg">
+          <div><b>GPS</b><span>Navegación autónoma</span></div>
+          <div><b>Litio</b><span>Baterías de litio, 2 × 24 V · 100 Ah</span></div>
+          <div><b>200<small> L</small></b><span>Capacidad total de los tanques</span></div>
+          <div><b>3<small> km/h</small></b><span>Velocidad de avance</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -586,34 +666,15 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
     <div class="head">
       <p class="eyebrow">Resultado</p>
       <h2>Antes y después de una pasada.</h2>
-      <p class="lede">Arrastrá el divisor. A la derecha, fibra con alga y suciedad; a la izquierda, la franja que dejó Turfo.</p>
+      <p class="lede">Arrastrá el divisor. A la derecha, fibra con suciedad, hojas y restos; a la izquierda, la fibra después de la limpieza.</p>
     </div>
     <div class="cmp" id="cmp">
-      <canvas id="turf-clean" aria-hidden="true"></canvas>
-      <canvas id="turf-dirty" aria-hidden="true"></canvas>
+      <img id="turf-clean" src="img/turf_clean.jpg" alt="Césped sintético limpio después de una pasada de Turfo" width="1600" height="800" loading="lazy" decoding="async">
+      <img id="turf-dirty" src="img/turf_dirty.jpg" alt="Césped sintético con suciedad, hojas y piedras antes de la pasada" width="1600" height="800" loading="lazy" decoding="async">
       <span class="lbl l">Después</span><span class="lbl r">Antes</span>
       <div class="handle"></div>
       <input type="range" id="cmp-range" min="0" max="100" value="50" aria-label="Comparar antes y después">
     </div>
-    <p class="note">Ilustración, no fotografía.</p>
-  </div>
-</section>
-
-<section class="scene" id="tanques" data-scene="tanques">
-  <div class="pin">
-    <div class="wrap tk-grid">
-      <div class="tk-copy">
-        <p class="eyebrow">Agua</p>
-        <h2>150 litros que circulan.</h2>
-        <p class="lede">El agua sucia no se descarta: pasa por el tanque de aspiración, el filtro y el intermedio, y vuelve al tanque limpio.</p>
-      </div>
-      <div class="tanks">
-        <div class="tank a"><div class="num" id="lv-a">0 L</div><div class="vessel"><div class="fill"></div></div><div class="cap-l">Aspiración<br>25 L</div></div>
-        <div class="tank c"><div class="num" id="lv-c">150 L</div><div class="vessel"><div class="fill"></div></div><div class="cap-l">Agua limpia<br>150 L</div></div>
-        <div class="tank i"><div class="num" id="lv-i">0 L</div><div class="vessel"><div class="fill"></div></div><div class="cap-l">Intermedio<br>25 L</div></div>
-      </div>
-    </div>
-    <div class="progress"></div>
   </div>
 </section>
 
@@ -774,7 +835,7 @@ function realMachine(o){
  const under=o.turf?`<svg class="under" viewBox="0 0 1000 916" aria-hidden="true"><rect class="tf" x="0" y="764" width="1000" height="26"/><rect class="td" x="0" y="764" width="1000" height="26"/>${[40,90,150,210,260,330,390,450,520,580,640,712,740,768,800,830,862,900,940,975].map((x,i)=>`<circle class="td" cx="${x}" cy="${772+(i%3)*6}" r="${3+(i%2)*2}"/>`).join('')}<g class="clean"><rect class="tf" x="-2400" y="764" width="3090" height="26"/><rect class="tw" x="-2400" y="764" width="3090" height="26"/></g><line class="tmark" x1="0" y1="777" x2="1000" y2="777"/></svg>`:'';
  const LV={tankC:'<div class="lvl lvC"><i></i></div>',tankNear:'<div class="lvl lvN"><i></i></div>'};
  const imgs=LAYERS.map(l=>`<img class="ly ${l.n}" data-st="${l.st.join(' ')}" src="ly2/${l.n}.png" alt="" style="--dy:${l.dy}" decoding="async">`+(o.fx&&LV[l.n]?LV[l.n]:'')).join('');
- const spray=`<g class="spray"><line x1="682" y1="600" x2="662" y2="764"/><line x1="692" y1="600" x2="692" y2="764"/><line x1="702" y1="600" x2="722" y2="764"/></g>`;
+ const spray=`<g class="spray"><line x1="660" y1="712" x2="646" y2="764"/><line x1="670" y1="712" x2="670" y2="764"/><line x1="680" y1="712" x2="694" y2="764"/><circle cx="670" cy="710" r="5" fill="var(--water)"/></g>`;
  const lead=o.tags?RT.map(t=>`<g class="mv" style="--dyu:${DYL[t.p]*9.16}"><g class="leader"><circle cx="${t.ax}" cy="${t.ay}" r="5"/><line x1="${t.ax}" y1="${t.ay}" x2="${t.tx}" y2="${t.ty}"/></g></g>`).join(''):'';
  const arc=(cx,cy,dir)=>`<g class="roll ${dir}" style="transform-origin:${cx}px ${cy}px"><path d="M${cx-24},${cy} A24,24 0 1 1 ${cx},${cy+24}"/><path class="ah" d="M${cx-4},${cy+18} L${cx+4},${cy+24} L${cx-3},${cy+31}"/></g>`;
  const fx=o.fx?`${spray}
@@ -809,10 +870,85 @@ function setStep(n){
  stepsEl.querySelectorAll('.step').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.s===n)));
  if(n){document.getElementById('ex-n').textContent='Paso '+n+' de '+STEPS.length;document.getElementById('ex-t').textContent=STEPS[n-1][0];document.getElementById('ex-p').textContent=STEPS[n-1][1];}
  explain.classList.toggle('open',n>0);
+ ALT.go(n);
 }
 stepsEl.addEventListener('click',e=>{const b=e.target.closest('.step');if(b)setStep(+b.dataset.s)});
 markStage(0);
 
+
+/* ---------- Proceso: vistas giradas desde Fusion ---------- */
+const ALT=(function(){
+ const host=document.getElementById('m-stage'),stage=document.getElementById('stage');
+ const tag=(x,y,ax,ay,t,s,w)=>{w=w||(t.length*10.5+(s?s.length*8.6+14:0)+30);return `<g class="ftag"><line x1="${ax}" y1="${ay}" x2="${x}" y2="${y}"/><circle cx="${ax}" cy="${ay}" r="4" fill="var(--fg)"/><rect x="${x-w/2}" y="${y-17}" width="${w}" height="34" rx="17"/><text x="${x}" y="${y}">${t}${s?` <tspan>${s}</tspan>`:''}</text></g>`};
+ const sk=(x,y,ry)=>`<ellipse class="spk" cx="${x}" cy="${y}" rx="4.5" ry="${ry}"/>`;
+ const chain=(x1,y1,x2,y2)=>`<line class="ch-run" x1="${x1}" y1="${y1-8}" x2="${x2}" y2="${y2+14}"/><line class="ch-link" x1="${x1}" y1="${y1-8}" x2="${x2}" y2="${y2+14}"/>${sk(x1,y1,9)}${sk(x2,y2,15)}`;
+ const trac=`<g class="g-trac">
+  <rect class="mot" x="522" y="474" width="186" height="58" rx="10"/><rect class="mot" x="292" y="474" width="186" height="58" rx="10"/>
+  ${chain(535.5,493,528,655)}${chain(464.5,493,472,655)}
+  <g style="transform-origin:535px 493px"><path class="spinr go" d="M553,493 A18,18 0 1 1 535,475" style="transform-origin:535px 493px"/></g>
+  <path class="spinr go" d="M447,493 A18,18 0 1 0 465,475" style="transform-origin:465px 493px;animation-direction:reverse"/>
+  ${tag(800,420,690,480,'Motor','24 V')}${tag(200,420,310,480,'Motor','24 V')}${tag(690,720,532,600,'Cadena y piñón','')}
+ </g>`;
+ const R=(x,y,w,h)=>({x,y,w,h});
+ const TK={c:R(386,64,230,312),a:R(603,137,105,228),i:R(279,127,109,245)};
+ const tank=(k,cls)=>{const t=TK[k];return `<rect class="tk" x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" rx="8"/><rect class="tkw ${cls}" id="lw-${k}" x="${t.x+4}" width="${t.w-8}" y="${t.y+t.h-4}" height="0" rx="4"/>`};
+ const pipe=(id,cls,d)=>`<path class="rp ${cls}" id="p-${id}" d="${d}"/><path class="rf" id="f-${id}" d="${d}"/>`;
+ const rec=`<g class="g-rec">
+  ${pipe('vac','dirty','M770,700 L770,100 L655,100 L655,140')}
+  ${pipe('sif','dirty','M690,345 L690,112 L728,112 L728,405 L560,405')}
+  ${pipe('sif2','filt','M524,405 L345,405 L345,372')}
+  ${pipe('p12','clean','M330,372 L330,450 M312,470 L238,470 L238,38 L500,38 L500,66')}
+  ${pipe('p24','clean','M455,376 L455,452 M455,488 L455,640')}
+  ${tank('a','dt')}${tank('i','fl')}${tank('c','cl')}
+  <rect class="filtr" x="524" y="388" width="36" height="34" rx="8"/>
+  <circle class="pump" id="pm12" cx="330" cy="470" r="19"/><path class="spinr" id="sp12" d="M330,458 A12,12 0 1 1 318,470" style="transform-origin:330px 470px"/>
+  <circle class="pump" id="pm24" cx="455" cy="470" r="19"/><path class="spinr" id="sp24" d="M455,458 A12,12 0 1 1 443,470" style="transform-origin:455px 470px"/>
+  <line x1="291" y1="652" x2="702" y2="652" stroke="var(--metal-dk)" stroke-width="7" stroke-linecap="round"/>
+  <g class="drops" id="drops">${[310,360,410,455,500,545,590,640,685].map(x=>`<line x1="${x}" y1="660" x2="${x+(x-497)*.08}" y2="790"/>`).join('')}</g>
+  ${tag(500,24,500,64,'Agua limpia','150 L')}${tag(872,190,708,200,'Aspiración','25 L')}${tag(128,190,279,200,'Intermedio','25 L')}
+  ${tag(620,452,542,422,'Filtro','')}${tag(190,530,318,480,'Bomba','12 V')}${tag(600,520,472,478,'Bomba','24 V')}${tag(880,610,770,640,'Manguera de aspiración','')}${tag(860,70,728,112,'Sifón','')}
+  <text class="rstat" x="40" y="880" id="rstat"></text>
+ </g>`;
+ host.insertAdjacentHTML('beforeend',`<div class="alt" id="alt"><div class="altm"><canvas width="1000" height="916"></canvas><svg class="altfx" viewBox="0 0 1000 916" aria-hidden="true">${trac}${rec}</svg></div></div>`);
+ stage.insertAdjacentHTML('afterbegin','<div class="gwrap"><div class="ground"></div><div class="horizon"></div></div>');
+ const alt=document.getElementById('alt'),cv=alt.querySelector('canvas'),cx=cv.getContext('2d');
+ const SEQ={trac:{n:40,end:39},rec:{n:41,end:40}},IM={};
+ function load(v){if(IM[v])return IM[v];IM[v]=[];for(let i=0;i<SEQ[v].n;i++){const im=new Image();im.decoding='async';im.src=`p3/${v}/f${String(i).padStart(3,'0')}.webp`;IM[v].push(im)}return IM[v]}
+ let tok=0,loop=0;
+ function draw(v,i){const a=IM[v];let k=i;while(k>0&&!(a[k].complete&&a[k].naturalWidth))k--;if(a[k].complete&&a[k].naturalWidth){cx.clearRect(0,0,1000,916);cx.drawImage(a[k],0,0,1000,916)}}
+ const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
+ function play(v){const my=++tok;cancelAnimationFrame(loop);alt.classList.remove('done');alt.dataset.v=v;stage.dataset.alt=v;load(v);
+  const frames=IM[v],first=frames[0];
+  const go=()=>{if(my!==tok)return;const t0=performance.now(),D=v==='trac'?2400:2600,E=SEQ[v].end;
+   const st=now=>{if(my!==tok)return;const p=Math.min(1,(now-t0)/D);draw(v,Math.round(ease(p)*E));if(p<1)requestAnimationFrame(st);else{draw(v,E);alt.classList.add('done');if(v==='rec')recLoop(my)}};
+   requestAnimationFrame(st)};
+  Promise.all(frames.map(im=>im.decode?im.decode().catch(()=>{}):Promise.resolve())).then(go);
+  draw(v,0)}
+ function stop(){tok++;cancelAnimationFrame(loop);alt.classList.remove('done');delete stage.dataset.alt;delete alt.dataset.v}
+ /* Recirculación: 4 fases en 12 s */
+ const $=id=>document.getElementById(id);
+ function lvl(k,f){const t=TK[k],h=(t.h-8)*f,r=$('lw-'+k);r.setAttribute('y',t.y+t.h-4-h);r.setAttribute('height',h)}
+ const lerp=(a,b,t)=>a+(b-a)*Math.max(0,Math.min(1,t));
+ const PH=[['1 · Aspiración','el agua sucia sube al tanque de aspiración'],['2 · Sifón y filtro','el agua pasa al tanque intermedio'],['3 · Bomba 12 V','el agua filtrada vuelve al tanque limpio'],['4 · Bomba 24 V','el agua limpia sale por los aspersores']];
+ function recLoop(my){const t0=performance.now();
+  const f=now=>{if(my!==tok)return;const s=((now-t0)/1000)%12,ph=Math.floor(s/3),u=(s%3)/3;
+   let A,I,C;
+   if(ph===0){A=lerp(.18,.78,u);I=.12;C=.62}
+   else if(ph===1){A=lerp(.78,.18,u);I=lerp(.12,.7,u);C=.62}
+   else if(ph===2){A=.18;I=lerp(.7,.12,u);C=lerp(.62,.9,u)}
+   else{A=.18;I=.12;C=lerp(.9,.62,u)}
+   lvl('a',A);lvl('i',I);lvl('c',C);
+   const on={vac:ph===0,sif:ph===1,sif2:ph===1,p12:ph===2,p24:ph===3};
+   for(const k in on){$('p-'+k).classList.toggle('on',on[k]);$('f-'+k).classList.toggle('on',on[k])}
+   $('pm12').classList.toggle('on',ph===2);$('sp12').classList.toggle('go',ph===2);$('pm24').classList.toggle('on',ph===3);$('sp24').classList.toggle('go',ph===3);
+   $('drops').classList.toggle('on',ph===3);
+   const r=$('rstat');if(r.dataset.ph!=ph){r.dataset.ph=ph;r.innerHTML=`${PH[ph][0]} <tspan>${PH[ph][1]}</tspan>`}
+   loop=requestAnimationFrame(f)};
+  loop=requestAnimationFrame(f)}
+ return {go(n){if(n===5)play('trac');else if(n===4)play('rec');else stop()},preload(){load('trac');load('rec')}};
+})();
+
+new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){ALT.preload();o.disconnect()}},{rootMargin:'800px'}).observe(document.getElementById('proceso'));
 /* ---------- Vista superior: recirculación ---------- */
 // Frente a la derecha. Etapas: 1 aspiración, 2 filtrado, 3 retorno, 4 riego.
 const PIPES=[
@@ -877,8 +1013,6 @@ function turf(cv,dirty){
  for(let i=0;i<900;i++){c.fillStyle=hexA(ad,.6+r2()*.4);c.beginPath();c.arc(r2()*w,r2()*h,.8+r2()*2.4,0,7);c.fill()}
  for(let i=0;i<26;i++){const x=r2()*w,y=r2()*h;c.save();c.translate(x,y);c.rotate(r2()*6.28);c.fillStyle=hexA(i%3?'#6b5a2e':'#3d3a1c',.85);c.beginPath();c.ellipse(0,0,10+r2()*10,4+r2()*3,0,0,7);c.fill();c.restore()}
 }
-turf(document.getElementById('turf-clean'),false);
-turf(document.getElementById('turf-dirty'),true);
 
 /* ---------- Cancha: un cuarto de cancha, lateral a lateral ---------- */
 const pitch=document.getElementById('pitch');
