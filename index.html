@@ -31,7 +31,7 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--fg);font-family:var(--f-text);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-text);font-size:17px;line-height:1.55;-webkit-font-smoothing:antialiased}
 .wrap{max-width:1200px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:-.02em}
 p{margin:0}
@@ -281,8 +281,8 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .altm canvas,.altm svg{position:absolute;inset:0;width:100%;height:100%;display:block;overflow:visible}
 .altfx{opacity:0;transition:opacity .5s}
 .alt.done .altfx{opacity:1}
-.altfx .g-trac,.altfx .g-rec{display:none}
-.alt[data-v="trac"] .g-trac,.alt[data-v="rec"] .g-rec{display:inline}
+.altfx .g-trac,.altfx .g-rec,.altfx .g-brush{display:none}
+.alt[data-v="trac"] .g-trac,.alt[data-v="rec"] .g-rec,.alt[data-v="brush"] .g-brush{display:inline}
 .stage{position:relative}
 .gwrap{position:absolute;inset:0;overflow:hidden;contain:paint;border-radius:inherit;pointer-events:none}
 .stage>.rm{position:relative}
@@ -319,6 +319,23 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .rstat{font-family:var(--f-text);font-size:22px;font-weight:600;fill:var(--fg)}
 .rstat tspan{font-family:var(--f-mono);font-size:16px;fill:var(--teal);font-weight:400}
 
+.belt-run{fill:none;stroke:#2a3238;stroke-width:7;opacity:.85}
+.belt-link{fill:none;stroke:var(--metal-hi);stroke-width:3.5;stroke-dasharray:5 6;animation:chain .5s linear infinite}
+.bfl{stroke:#fff;stroke-width:3;stroke-linecap:round;opacity:0;animation:bflick .6s linear infinite}
+@keyframes bflick{0%{opacity:0;transform:translate(0,-10px)}30%{opacity:.85}100%{opacity:0;transform:translate(-3px,16px)}}
+.bspray line{stroke:var(--water);stroke-width:3;stroke-dasharray:4 9;animation:drip .5s linear infinite}
+.bnoz circle{fill:var(--water)}
+.alt[data-v="brush"] canvas{-webkit-mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 10%,#000 86%,transparent);-webkit-mask-composite:source-in;mask-image:linear-gradient(to right,transparent,#000 12%,#000 88%,transparent),linear-gradient(transparent,#000 10%,#000 86%,transparent);mask-composite:intersect}
+.cost-card:has(#barsCt){display:flex;flex-direction:column}
+#barsCt{flex:1;display:grid;place-items:center}
+.pie{display:grid;place-items:center;width:100%}
+.pie svg{width:100%;max-width:520px;height:auto;display:block}
+.pie path{stroke:var(--surface-2);stroke-width:1.5}
+.pie .pl{font-family:var(--f-text);font-size:15px;font-weight:600;text-anchor:middle}
+.pie .pl .pv{font-family:var(--f-display);font-size:22px;font-weight:800}
+.pie .pa{fill:none;stroke:var(--fg);stroke-width:1.3}
+.pie .po{font-family:var(--f-text);font-size:12.5px;font-weight:600;fill:var(--fg)}
+.pie .po2{font-family:var(--f-mono);font-size:11px;fill:var(--muted);font-weight:400}
 /* Recirculación, vista superior */
 #recirculacion{height:460vh;background:var(--surface)}
 .tbox{position:relative;width:min(100%,calc((100svh - 150px) * 1.667));aspect-ratio:1000/600;max-width:100%}
@@ -451,6 +468,35 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .mk-sg small{font-size:.45em;font-weight:500;color:var(--teal-hi)}
 .mk-sg span{font-size:15px;color:#c9d0d3}
 @media (max-width:820px){.mk-sg{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.pnl{position:relative;max-width:980px;margin:0 auto}
+.pnl img{display:block;width:100%;height:auto}
+.pnl-scr{position:absolute;left:31.9%;top:20.5%;width:34.6%;height:20.1%;border-radius:4px;display:grid;align-content:center;justify-items:center;gap:2px;font-family:var(--f-mono);color:#7fe9ef;text-shadow:0 0 6px rgba(48,200,210,.6);background:#050809;opacity:0;transition:opacity .4s;overflow:hidden;padding:0 4%}
+.pnl[data-on="1"] .pnl-scr{opacity:1}
+.pnl-scr .l1{font-size:clamp(9px,1.5vw,16px);letter-spacing:.18em}
+.pnl-scr .l2{font-size:clamp(11px,2vw,22px);font-weight:600;color:#e9feff}
+.pnl-scr .l3{font-size:clamp(8px,1.1vw,12px);color:#5fb9bf;letter-spacing:.06em}
+.pnl[data-stop="1"] .pnl-scr{color:#ff8a80;text-shadow:0 0 6px rgba(255,80,60,.6)}.pnl[data-stop="1"] .pnl-scr .l2{color:#ffd2cc}
+.pnl-key{position:absolute;left:75.2%;top:18.2%;width:10.6%;height:18.8%;padding:0;border:0;border-radius:4px;background:#0b0e10;cursor:pointer}
+.pnl-key svg{width:100%;height:100%;display:block}
+.pnl-key .kr{fill:#2a3035;stroke:#59636a;stroke-width:2}.pnl-key .kc{fill:#c9d1d6}
+.pnl-key .kl{fill:#3c4a55;transform-origin:50px 56px;transform:rotate(-45deg);transition:transform .35s}
+.pnl-key[aria-pressed="true"] .kl{transform:rotate(45deg)}
+.pnl-key .kt{font:600 11px var(--f-mono);fill:#8a959b;text-anchor:middle}
+.pnl-key[aria-pressed="true"] .kt.on,.pnl-key[aria-pressed="false"] .kt.off{fill:#7fe9ef}
+.pnl-stop{position:absolute;left:12.4%;top:19.2%;width:12.2%;aspect-ratio:1;border-radius:50%;border:0;background:transparent;cursor:pointer}
+.pnl-stop:active{background:rgba(0,0,0,.12)}
+.pnl-led{position:absolute;left:calc(var(--x) - 8%);top:52%;width:16%;height:40%;border:0;background:transparent;cursor:pointer;border-radius:12px}
+.pnl-led::before{content:"";position:absolute;left:50%;top:20%;width:24%;aspect-ratio:1;transform:translate(-50%,-50%);border-radius:50%;background:rgba(10,20,22,.55);transition:background .25s,box-shadow .25s}
+.pnl-led[aria-pressed="true"]::before{background:rgba(110,255,230,.25);box-shadow:0 0 14px 6px rgba(80,240,220,.75),inset 0 0 6px rgba(255,255,255,.8)}
+.pnl-led:focus-visible,.pnl-key:focus-visible,.pnl-stop:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+.trailer{background:#050809;padding:clamp(72px,9vw,110px) 0 clamp(24px,4vw,48px)}
+.tr-wrap{position:relative;width:min(1200px,calc(100% - 32px));margin:0 auto;aspect-ratio:16/9;border-radius:clamp(10px,1.6vw,22px);overflow:hidden;background:#000;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.tr-wrap video{width:100%;height:100%;display:block;object-fit:cover;background:#000}
+.tr-play{position:absolute;inset:0;display:grid;place-content:center;justify-items:center;gap:12px;border:0;background:linear-gradient(transparent 40%,rgba(0,0,0,.45));color:#fff;cursor:pointer;font:600 clamp(14px,1.4vw,18px) var(--f-text);letter-spacing:.04em;transition:opacity .3s}
+.tr-play svg{width:clamp(64px,8vw,96px);height:auto}
+.tr-play circle{fill:rgba(48,155,165,.9)}.tr-play path{fill:#fff}
+.tr-play:hover circle{fill:var(--teal-hi)}
+.trailer.playing .tr-play{opacity:0;pointer-events:none}
 #fea{background:var(--surface)}
 .fea-tabs{display:inline-grid;grid-template-columns:1fr 1fr;gap:4px;background:#e1e4e5;border-radius:16px;padding:4px;margin-bottom:24px;max-width:100%}
 .fea-tabs button{font:inherit;border:0;border-radius:12px;padding:10px 16px;background:transparent;color:var(--muted);font-weight:600;font-size:15px;cursor:pointer;display:grid;gap:2px;text-align:left}
@@ -491,12 +537,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cost-hero .s{font-size:13px;color:var(--muted)}
 .cost-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
 .cost-grid>.cost-card:first-child{grid-row:span 2}
-.cost-card.expl{grid-column:2 / span 2;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
-.ex{display:grid;gap:6px;align-content:start;border-left:2px solid var(--teal-hi);padding-left:12px}
-.ex .k{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--teal)}
-.ex b{font-family:var(--f-display);font-size:24px;font-weight:800;font-variation-settings:"wdth" 112;font-variant-numeric:tabular-nums;line-height:1}
+.cost-card.expl{grid-column:2 / span 2;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;align-items:center;align-content:center}
+.ex{display:grid;gap:12px;align-content:center;justify-items:center;text-align:center;padding:8px 6px}
+.ex+.ex{border-left:1px solid var(--line)}
+.ex .k{font-family:var(--f-mono);font-size:13px;letter-spacing:.1em;line-height:1.4;text-transform:uppercase;color:var(--teal)}
+.ex b{font-family:var(--f-display);font-size:clamp(30px,3.2vw,44px);font-weight:800;font-variation-settings:"wdth" 112;font-variant-numeric:tabular-nums;line-height:1}
 .ex p{font-size:13px;color:var(--muted);line-height:1.45}
-@media (max-width:900px){.cost-grid>.cost-card:first-child{grid-row:auto}.cost-card.expl{grid-column:auto;grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.cost-grid>.cost-card:first-child{grid-row:auto}.cost-card.expl{grid-column:auto;grid-template-columns:minmax(0,1fr)}.ex+.ex{border-left:0;border-top:1px solid var(--line);padding-top:16px}}
 .cost-card{background:var(--surface-2);border:1px solid var(--line);border-radius:20px;padding:18px;display:grid;gap:12px;align-content:start}
 .cost-card h3{font-size:17px;font-variation-settings:"wdth" 108;font-weight:700}
 .bars{display:grid;gap:10px}
@@ -507,12 +554,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .cbar .tr i{display:block;height:100%;border-radius:0 4px 4px 0;background:var(--teal-hi)}
 .cbar .sub{font-size:11px;color:var(--muted)}
 .cbar:hover .tr i{background:var(--teal)}
-.cost-card.vol{margin-top:14px;grid-template-columns:minmax(0,1.1fr) minmax(0,1.3fr) minmax(0,.9fr);align-items:center;gap:24px}
+.cost-card.vol{margin:14px auto 0;max-width:66.67%;grid-template-columns:auto minmax(0,1.4fr) minmax(0,.9fr);align-items:center;gap:24px}
+.vol-ic svg{width:clamp(90px,10vw,130px);height:auto;display:block}
+.vol-ic .fac{fill:#dfe9ea}.vol-ic .facw{fill:#c4d6d8}.vol-ic .wk{fill:var(--fg)}.vol-ic .hat{fill:var(--teal-hi)}.vol-ic .vest{fill:var(--teal-hi);opacity:.9}
 .save{display:grid;gap:6px;border-left:2px solid var(--teal-hi);padding-left:16px}
 .save .k{font-family:var(--f-mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--teal)}
-.save b{font-family:var(--f-display);font-size:clamp(28px,3vw,40px);line-height:1;font-weight:800;font-variation-settings:"wdth" 116;font-variant-numeric:tabular-nums}
+.save b{white-space:nowrap;font-family:var(--f-display);font-size:clamp(26px,2.3vw,34px);line-height:1;font-weight:800;font-variation-settings:"wdth" 116;font-variant-numeric:tabular-nums}
 .save .s{font-size:13px;color:var(--muted)}
-@media (max-width:900px){.fea-grid,.cost-grid,.cost-card.vol{grid-template-columns:minmax(0,1fr)}.cost-hero{grid-template-columns:minmax(0,1fr)}}
+@media (max-width:900px){.cost-card.vol{max-width:none}.vol-ic svg{margin:0 auto}.fea-grid,.cost-grid,.cost-card.vol{grid-template-columns:minmax(0,1fr)}.cost-hero{grid-template-columns:minmax(0,1fr)}}
 
 .specs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));border-top:1px solid var(--line-hi)}
 .spec{padding:28px 20px 28px 0;border-bottom:1px solid var(--line);display:grid;gap:6px;align-content:start}
@@ -574,6 +623,12 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
 
 
 
+<section class="trailer" id="trailer" aria-label="Video de presentación de Turfo">
+  <div class="tr-wrap">
+    <video id="trVid" src="video/trailer.mp4" poster="video/poster.jpg" preload="metadata" playsinline controls></video>
+    <button class="tr-play" id="trPlay" type="button" aria-label="Reproducir el video de Turfo"><svg viewBox="0 0 80 80"><circle cx="40" cy="40" r="38"/><path d="M32,25 L58,40 L32,55 Z"/></svg><span>Ver el video</span></button>
+  </div>
+</section>
 <section class="scene" id="interior" data-scene="interior">
   <div class="pin">
     <div class="wrap int-grid">
@@ -611,15 +666,6 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
           <li><b>Alquiler</b><span>por suscripción mensual o anual</span></li>
           <li><b>Servicio de limpieza</b><span>como empresa tercerizada</span></li>
         </ol>
-      </div>
-      <div class="mk-specs">
-        <span class="k">Especificaciones · anteproyecto</span>
-        <div class="mk-sg">
-          <div><b>GPS</b><span>Navegación autónoma</span></div>
-          <div><b>Litio</b><span>Baterías de litio, 2 × 24 V · 100 Ah</span></div>
-          <div><b>200<small> L</small></b><span>Capacidad total de los tanques</span></div>
-          <div><b>3<small> km/h</small></b><span>Velocidad de avance</span></div>
-        </div>
       </div>
     </div>
   </div>
@@ -698,6 +744,23 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
   </div>
 </section>
 
+<section class="band" id="panel" style="background:#f7f7f7">
+  <div class="wrap">
+    <div class="head">
+      <p class="eyebrow">Panel de control</p>
+      <h2>Todo a mano, en la máquina.</h2>
+      <p class="lede">Encendé el panel con la llave. Tocá cada sistema para prenderlo o apagarlo; el botón rojo es la parada de emergencia.</p>
+    </div>
+    <div class="pnl" id="pnl" data-on="0">
+      <img src="img/panel.jpg" alt="Panel de control de Turfo con parada de emergencia, pantalla, llave de encendido y cinco indicadores: cepillos, tracción, squeegee, aspiración y aspersión" width="1766" height="985" loading="lazy">
+      <div class="pnl-scr" id="pnlScr" aria-live="polite"><div class="l1" id="pS1"></div><div class="l2" id="pS2"></div><div class="l3" id="pS3"></div></div>
+      <button class="pnl-key" id="pnlKey" type="button" aria-pressed="false" aria-label="Llave de encendido"><svg viewBox="0 0 100 100"><text class="kt off" x="18" y="18">OFF</text><text class="kt on" x="82" y="18">ON</text><circle class="kr" cx="50" cy="56" r="34"/><circle class="kc" cx="50" cy="56" r="25"/><g class="kl"><rect x="45" y="28" width="10" height="56" rx="5"/><circle cx="50" cy="56" r="7"/></g></svg></button>
+      <button class="pnl-stop" id="pnlStop" type="button" aria-label="Parada de emergencia"></button>
+      <button class="pnl-led" type="button" data-i="0" style="--x:15.1%" aria-pressed="false" aria-label="Cepillos"></button><button class="pnl-led" type="button" data-i="1" style="--x:32.2%" aria-pressed="false" aria-label="Tracción"></button><button class="pnl-led" type="button" data-i="2" style="--x:48.8%" aria-pressed="false" aria-label="Squeegee"></button><button class="pnl-led" type="button" data-i="3" style="--x:66.4%" aria-pressed="false" aria-label="Aspiración"></button><button class="pnl-led" type="button" data-i="4" style="--x:83.6%" aria-pressed="false" aria-label="Aspersión"></button>
+    </div>
+  </div>
+</section>
+
 <section class="band" id="fea">
   <div class="wrap">
     <div class="head">
@@ -763,13 +826,24 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
         <p class="note">Los tanques de la máquina final son de inoxidable AISI 304 y concentran la materia prima. El prototipo usa tanques estándar de motorhome.</p>
       </div>
       <div class="cost-card expl">
-        <div class="ex"><span class="k">Mano de obra directa (MOD)</span><b>$ 161.998</b><p>14,84 h de fabricación por máquina, a $ 7.800/h más 40 % de cargas sociales: $ 10.920/h. El costo indirecto se calcula como 600 % de la MOD: $ 971.989.</p></div>
-        <div class="ex"><span class="k">Amortización de herramentales (AM)</span><b>$ 4.575</b><p>Jig de soldadura del chasis ($ 420.000), matriz de plegado ($ 260.000), utillaje de torneado ($ 140.000) y programa CAM de corte láser ($ 95.000), repartidos en 200 máquinas.</p></div>
-        <div class="ex"><span class="k">Componentes tercerizados (CT)</span><b>$ 75.000</b><p>Terminaciones que no hace el equipo: pintura al horno del chasis ($ 38.000), epoxy del carro de cepillos ($ 22.000) y pintura en polvo de la unión al chasis ($ 15.000).</p></div>
+        <div class="ex"><span class="k">Mano de obra directa (MOD)</span><b>$ 161.998</b></div>
+        <div class="ex"><span class="k">Amortización de herramentales (AM)</span><b>$ 4.575</b></div>
+        <div class="ex"><span class="k">Componentes tercerizados (CT)</span><b>$ 75.000</b></div>
       </div>
     </div>
     <div class="cost-card vol">
-      <div><h3>Volumen de producción</h3><p class="note">Con 200 u/año hacen falta 1,4 operarios: se pagan 2 (352 h/mes) y se usan 247 h. Con los mismos 2 operarios se pueden hacer hasta 284 u/año.</p></div>
+      <div class="vol-ic" aria-hidden="true"><svg viewBox="0 0 120 120"><g transform="translate(0 0)">
+        <path class="fac" d="M6,104 V58 L30,44 V58 L54,44 V58 L78,44 V30 H90 V22 H100 V104 Z"/>
+        <rect class="facw" x="14" y="74" width="10" height="10" rx="1.5"/><rect class="facw" x="36" y="74" width="10" height="10" rx="1.5"/><rect class="facw" x="80" y="56" width="10" height="10" rx="1.5"/>
+        <g transform="translate(-20 0)"><circle class="wk" cx="62" cy="66" r="11"/>
+        <path class="hat" d="M48,62 a14,13 0 0 1 28,0 Z"/><rect class="hat" x="45" y="60" width="34" height="5" rx="2.5"/>
+        <path class="wk" d="M40,112 V98 a22,20 0 0 1 44,0 V112 Z"/>
+        <path class="vest" d="M56,80 h12 v32 h-12 Z"/></g>
+        <g transform="translate(18 0)"><circle class="wk" cx="62" cy="66" r="11"/>
+        <path class="hat" d="M48,62 a14,13 0 0 1 28,0 Z"/><rect class="hat" x="45" y="60" width="34" height="5" rx="2.5"/>
+        <path class="wk" d="M40,112 V98 a22,20 0 0 1 44,0 V112 Z"/>
+        <path class="vest" d="M56,80 h12 v32 h-12 Z"/></g></g>
+      </svg></div>
       <div class="bars" id="barsVol"></div>
       <div class="save"><span class="k">Ahorro por máquina a 280 u/año</span><b>$ 462.568</b><span class="s">MOD + costo indirecto + amortización. Una máquina por día hábil.</span></div>
     </div>
@@ -786,7 +860,7 @@ footer{padding-block:40px;border-top:1px solid var(--line);color:var(--muted);fo
     <div class="specs">
       <div class="spec"><span class="chip def">Definido</span><div class="v">60<small>cm</small></div><div class="k">Ancho de cepillos</div></div>
       <div class="spec"><span class="chip def">Definido</span><div class="v">2<small>rodillos</small></div><div class="k">En paralelo, bajo una campana</div></div>
-      <div class="spec"><span class="chip def">Definido</span><div class="v">150<small>L</small></div><div class="k">Tanque de agua limpia</div></div>
+      <div class="spec"><span class="chip def">Definido</span><div class="v">100<small>L</small></div><div class="k">Tanque de agua limpia</div></div>
       <div class="spec"><span class="chip def">Definido</span><div class="v">2×25<small>L</small></div><div class="k">Tanques de aspiración e intermedio, con filtro entre ambos</div></div>
       <div class="spec"><span class="chip def">Definido</span><div class="v">2<small>motores</small></div><div class="k">Tracción en ruedas traseras</div></div>
       <div class="spec"><span class="chip def">Definido</span><div class="v">2×100<small>Ah</small></div><div class="k">Baterías de litio de 24 V</div></div>
@@ -889,6 +963,14 @@ const ALT=(function(){
   <path class="spinr go" d="M447,493 A18,18 0 1 0 465,475" style="transform-origin:465px 493px;animation-direction:reverse"/>
   ${tag(800,420,690,480,'Motor','24 V')}${tag(200,420,310,480,'Motor','24 V')}${tag(690,720,532,600,'Cadena y piñón','')}
  </g>`;
+const brush=`<g class="g-brush">
+  <path class="belt-run" d="M357.9,367.9 L426.3,469.3 A31,31 0 1 1 475.2,431.5 L394.2,339.8 A23,23 0 0 1 357.9,367.9 Z"/><path class="belt-link" d="M357.9,367.9 L426.3,469.3 A31,31 0 1 1 475.2,431.5 L394.2,339.8 A23,23 0 0 1 357.9,367.9 Z"/>
+  <path class="spinr go" d="M377,340 A15,15 0 1 1 362,355" style="transform-origin:377px 355px"/>
+  <path class="spinr go" d="M452,431 A21,21 0 1 1 431,452" style="transform-origin:452px 452px"/>
+  <g class="bsweep"><line class="bfl" x1="382.9" y1="525.4" x2="380.9" y2="551.4" style="animation-delay:0.00s"/><line class="bfl" x1="404.6" y1="536.2" x2="402.6" y2="562.2" style="animation-delay:0.09s"/><line class="bfl" x1="426.2" y1="547.0" x2="424.2" y2="573.0" style="animation-delay:0.18s"/><line class="bfl" x1="447.9" y1="557.8" x2="445.9" y2="583.8" style="animation-delay:0.27s"/><line class="bfl" x1="469.6" y1="568.6" x2="467.6" y2="594.6" style="animation-delay:0.36s"/><line class="bfl" x1="491.4" y1="579.4" x2="489.4" y2="605.4" style="animation-delay:0.45s"/><line class="bfl" x1="513.0" y1="590.2" x2="511.0" y2="616.2" style="animation-delay:0.54s"/><line class="bfl" x1="534.8" y1="601.0" x2="532.8" y2="627.0" style="animation-delay:0.03s"/><line class="bfl" x1="556.5" y1="611.8" x2="554.5" y2="637.8" style="animation-delay:0.12s"/><line class="bfl" x1="578.1" y1="622.6" x2="576.1" y2="648.6" style="animation-delay:0.21s"/><line class="bfl" x1="530.2" y1="506.2" x2="528.2" y2="532.2" style="animation-delay:0.30s"/><line class="bfl" x1="550.5" y1="518.7" x2="548.5" y2="544.7" style="animation-delay:0.39s"/><line class="bfl" x1="570.8" y1="531.1" x2="568.8" y2="557.1" style="animation-delay:0.48s"/><line class="bfl" x1="591.2" y1="543.6" x2="589.2" y2="569.6" style="animation-delay:0.57s"/><line class="bfl" x1="611.5" y1="556.0" x2="609.5" y2="582.0" style="animation-delay:0.06s"/><line class="bfl" x1="631.8" y1="568.4" x2="629.8" y2="594.4" style="animation-delay:0.15s"/><line class="bfl" x1="652.2" y1="580.9" x2="650.2" y2="606.9" style="animation-delay:0.24s"/><line class="bfl" x1="672.5" y1="593.3" x2="670.5" y2="619.3" style="animation-delay:0.33s"/><line class="bfl" x1="692.8" y1="605.8" x2="690.8" y2="631.8" style="animation-delay:0.42s"/></g>
+  <g class="bspray"><line x1="771.8" y1="558.3" x2="750.9" y2="645.6"/><line x1="753.5" y1="544.8" x2="731.3" y2="636.2"/><line x1="733.2" y1="529.9" x2="709.7" y2="625.9"/><line x1="710.7" y1="513.4" x2="685.7" y2="614.5"/><line x1="685.7" y1="495.0" x2="658.9" y2="601.8"/><line x1="657.6" y1="474.4" x2="628.8" y2="587.5"/><line x1="625.9" y1="451.1" x2="594.8" y2="571.3"/></g><g class="bnoz"><circle cx="771.8" cy="558.3" r="4"/><circle cx="753.5" cy="544.8" r="4"/><circle cx="733.2" cy="529.9" r="4"/><circle cx="710.7" cy="513.4" r="4"/><circle cx="685.7" cy="495.0" r="4"/><circle cx="657.6" cy="474.4" r="4"/><circle cx="625.9" cy="451.1" r="4"/></g>
+  ${tag(250,250,372,345,'Transmisión','')}${tag(300,720,470,600,'Rodillos','60 cm')}${tag(840,700,700,600,'Aspersores','')}
+ </g>`;
  const R=(x,y,w,h)=>({x,y,w,h});
  const TK={c:R(386,64,230,312),a:R(603,137,105,228),i:R(279,127,109,245)};
  const tank=(k,cls)=>{const t=TK[k];return `<rect class="tk" x="${t.x}" y="${t.y}" width="${t.w}" height="${t.h}" rx="8"/><rect class="tkw ${cls}" id="lw-${k}" x="${t.x+4}" width="${t.w-8}" y="${t.y+t.h-4}" height="0" rx="4"/>`};
@@ -909,17 +991,17 @@ const ALT=(function(){
   ${tag(620,452,542,422,'Filtro','')}${tag(190,530,318,480,'Bomba','12 V')}${tag(600,520,472,478,'Bomba','24 V')}${tag(880,610,770,640,'Manguera de aspiración','')}${tag(860,70,728,112,'Sifón','')}
   <text class="rstat" x="40" y="880" id="rstat"></text>
  </g>`;
- host.insertAdjacentHTML('beforeend',`<div class="alt" id="alt"><div class="altm"><canvas width="1000" height="916"></canvas><svg class="altfx" viewBox="0 0 1000 916" aria-hidden="true">${trac}${rec}</svg></div></div>`);
+ host.insertAdjacentHTML('beforeend',`<div class="alt" id="alt"><div class="altm"><canvas width="1000" height="916"></canvas><svg class="altfx" viewBox="0 0 1000 916" aria-hidden="true">${trac}${rec}${brush}</svg></div></div>`);
  stage.insertAdjacentHTML('afterbegin','<div class="gwrap"><div class="ground"></div><div class="horizon"></div></div>');
  const alt=document.getElementById('alt'),cv=alt.querySelector('canvas'),cx=cv.getContext('2d');
- const SEQ={trac:{n:40,end:39},rec:{n:41,end:40}},IM={};
+ const SEQ={trac:{n:40,end:39},rec:{n:41,end:40},brush:{n:48,end:47}},IM={};
  function load(v){if(IM[v])return IM[v];IM[v]=[];for(let i=0;i<SEQ[v].n;i++){const im=new Image();im.decoding='async';im.src=`p3/${v}/f${String(i).padStart(3,'0')}.webp`;IM[v].push(im)}return IM[v]}
  let tok=0,loop=0;
  function draw(v,i){const a=IM[v];let k=i;while(k>0&&!(a[k].complete&&a[k].naturalWidth))k--;if(a[k].complete&&a[k].naturalWidth){cx.clearRect(0,0,1000,916);cx.drawImage(a[k],0,0,1000,916)}}
  const ease=t=>t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;
  function play(v){const my=++tok;cancelAnimationFrame(loop);alt.classList.remove('done');alt.dataset.v=v;stage.dataset.alt=v;load(v);
   const frames=IM[v],first=frames[0];
-  const go=()=>{if(my!==tok)return;const t0=performance.now(),D=v==='trac'?2400:2600,E=SEQ[v].end;
+  const go=()=>{if(my!==tok)return;const t0=performance.now(),D=v==='rec'?2600:2400,E=SEQ[v].end;
    const st=now=>{if(my!==tok)return;const p=Math.min(1,(now-t0)/D);draw(v,Math.round(ease(p)*E));if(p<1)requestAnimationFrame(st);else{draw(v,E);alt.classList.add('done');if(v==='rec')recLoop(my)}};
    requestAnimationFrame(st)};
   Promise.all(frames.map(im=>im.decode?im.decode().catch(()=>{}):Promise.resolve())).then(go);
@@ -945,10 +1027,31 @@ const ALT=(function(){
    const r=$('rstat');if(r.dataset.ph!=ph){r.dataset.ph=ph;r.innerHTML=`${PH[ph][0]} <tspan>${PH[ph][1]}</tspan>`}
    loop=requestAnimationFrame(f)};
   loop=requestAnimationFrame(f)}
- return {go(n){if(n===5)play('trac');else if(n===4)play('rec');else stop()},preload(){load('trac');load('rec')}};
+ return {go(n){if(n===5)play('trac');else if(n===4)play('rec');else if(n===2)play('brush');else stop()},preload(){load('trac');load('rec');load('brush')}};
 })();
 
 new IntersectionObserver((e,o)=>{if(e[0].isIntersecting){ALT.preload();o.disconnect()}},{rootMargin:'800px'}).observe(document.getElementById('proceso'));
+
+(function(){
+const P=document.getElementById('pnl');if(!P)return;
+const $=id=>document.getElementById(id),leds=[...P.querySelectorAll('.pnl-led')];
+const N=['Cepillos','Tracción','Squeegee','Aspiración','Aspersión'];let on=false,st=[0,0,0,0,0],tm=0,k=0;
+function scr(a,b,c){$('pS1').textContent=a;$('pS2').textContent=b;$('pS3').textContent=c}
+function paint(){leds.forEach((l,i)=>l.setAttribute('aria-pressed',on&&st[i]?'true':'false'))}
+function info(){if(!on)return;const act=N.filter((n,i)=>st[i]);
+ const L=[['TURFO · MANTENIMIENTO','Cuarto 2 · 64 %','AVANCE 0,83 m/s · 43 PASADAS'],['BATERÍA','87 %','2 × 24 V · 100 Ah'],['AGUA LIMPIA','72 L','RECIRCULACIÓN ACTIVA'],['SISTEMAS',act.length?act.length+' de 5 activos':'Ninguno activo',act.join(' · ').toUpperCase()||'TOCÁ UN SISTEMA']];
+ const l=L[k%L.length];scr(l[0],l[1],l[2]);k++}
+function power(v){on=v;P.dataset.on=v?'1':'0';delete P.dataset.stop;$('pnlKey').setAttribute('aria-pressed',String(v));clearInterval(tm);
+ if(v){st=[0,0,0,0,0];scr('TURFO','Iniciando…','');paint();let i=0;const boot=setInterval(()=>{if(!on){clearInterval(boot);return}st[i]=1;paint();i++;if(i>=5){clearInterval(boot);k=0;info();tm=setInterval(info,2600)}},380)}
+ else{st=[0,0,0,0,0];paint()}}
+$('pnlKey').onclick=()=>power(!on);
+$('pnlStop').onclick=()=>{if(!on)return;clearInterval(tm);st=[0,0,0,0,0];paint();P.dataset.stop='1';scr('PARADA DE','EMERGENCIA','GIRÁ LA LLAVE PARA REINICIAR')};
+leds.forEach((l,i)=>l.onclick=()=>{if(!on||P.dataset.stop)return;st[i]=st[i]?0:1;paint();scr(N[i].toUpperCase(),st[i]?'Encendido':'Apagado','');clearInterval(tm);tm=setInterval(info,2600)});
+})();
+
+(function(){const v=document.getElementById('trVid'),b=document.getElementById('trPlay'),sec=document.getElementById('trailer');if(!v)return;
+b.onclick=()=>{v.muted=false;v.play();};
+v.addEventListener('play',()=>sec.classList.add('playing'));v.addEventListener('ended',()=>sec.classList.remove('playing'));})();
 /* ---------- Vista superior: recirculación ---------- */
 // Frente a la derecha. Etapas: 1 aspiración, 2 filtrado, 3 retorno, 4 riego.
 const PIPES=[
@@ -1100,7 +1203,21 @@ pintarFEA();
 function barras(id,rows,total,mostrarPct){const max=Math.max(...rows.map(r=>r[1]));
  $(id).innerHTML=rows.map(([n,v,sub])=>`<div class="cbar" title="${n}: $ ${fmt(v)}${mostrarPct?' ('+(v/total*100).toFixed(1).replace('.',',')+' %)':''}"><div class="t"><span>${n}</span><span>${mostrarPct?(v/total*100).toFixed(1).replace('.',',')+' %':'$ '+fmt(v)}</span></div><div class="tr"><i style="width:${(v/max*100).toFixed(1)}%"></i></div>${sub?`<span class="sub">${sub}</span>`:''}</div>`).join('')}
 const CT=5130318;
-barras('barsCt',[['Componentes comerciales (Std)',2467430,'48,1 % del costo total'],['Materia prima (MP)',1449326,'28,3 % del costo total'],['Costo indirecto (600 % MOD)',971989,'18,9 % del costo total'],['Mano de obra directa (MOD)',161998,'3,2 % del costo total'],['Tercerizados: pintura (CT)',75000,'1,5 % del costo total'],['Amortización herramentales (AM)',4575,'0,1 % del costo total']]);
+(function(){const rows=[['Componentes comerciales',2467430,'Std'],['Materia prima',1449326,'MP'],['Costo indirecto',971989,'600 % MOD'],['Mano de obra directa',161998,'MOD'],['Tercerizados',75000,'CT'],['Amortización',4575,'AM']];
+ const cols=['#101517','#23808a','#7fc8ce','#56636a','#aeb7bb','#d9c27a'];
+ const tot=rows.reduce((t,r)=>t+r[1],0);let a0=-Math.PI/2;const R=152,CX=232,CY=242;
+ const pc=v=>(v/tot*100).toFixed(1).replace('.',',')+' %';
+ let out='',ext=[];
+ rows.forEach(([n,v,k],i)=>{const a1=a0+v/tot*Math.PI*2,lg=(a1-a0)>Math.PI?1:0,mid=(a0+a1)/2;
+  out+=`<path d="M${CX},${CY} L${(CX+R*Math.cos(a0)).toFixed(2)},${(CY+R*Math.sin(a0)).toFixed(2)} A${R},${R} 0 ${lg} 1 ${(CX+R*Math.cos(a1)).toFixed(2)},${(CY+R*Math.sin(a1)).toFixed(2)} Z" fill="${cols[i]}"><title>${n} (${k}): $ ${fmt(v)} · ${pc(v)}</title></path>`;
+  if(v/tot>.08){const rr=i===0?.5:.6,x=CX+R*rr*Math.cos(mid),y=CY+R*rr*Math.sin(mid),fc=i===2?'#101517':'#fff',w=n.split(' ');
+   const l1=i===0?['Componentes','comerciales']:[n.split(' ')[0],n.split(' ').slice(1).join(' ')];
+   out+=`<text class="pl" x="${x.toFixed(1)}" y="${(y-22).toFixed(1)}" fill="${fc}"><tspan x="${x.toFixed(1)}" dy="0">${l1[0]}</tspan><tspan x="${x.toFixed(1)}" dy="17">${l1[1]}</tspan><tspan class="pv" x="${x.toFixed(1)}" dy="24">${pc(v)}</tspan></text>`}
+  else ext.push({n,k,v,mid,i});
+  a0=a1});
+ ext.sort((a,b)=>(CX+R*Math.cos(b.mid))-(CX+R*Math.cos(a.mid))).forEach((e,m)=>{const ax=CX+R*Math.cos(e.mid),ay=CY+R*Math.sin(e.mid),ty=18+m*28,tx=4;
+  out+=`<path class="pa" d="M${tx+176},${ty-4} H${ax.toFixed(1)} V${(ay-5).toFixed(1)}" marker-end="url(#pArr)"/><text class="po" x="${tx}" y="${ty}">${e.n} <tspan class="po2">${pc(e.v)}</tspan></text>`});
+ $('barsCt').innerHTML=`<div class="pie"><svg viewBox="0 0 420 400" role="img" aria-label="Gráfico de torta de la composición del costo total"><defs><marker id="pArr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--fg)"/></marker></defs>${out}</svg></div>`})();
 barras('barsStd',[['Motores de tracción y cepillos (×4)',972000,'2 de tracción + 2 de cepillos · $ 243.000 c/u'],['Batería Li-ion',420000,'Pack de autonomía, ~4 h']]);
 barras('barsMP',[['Tanque de agua limpia 150 L',583860,'AISI 304 · 1,5 mm · 55,6 kg'],['Tanque de recuperación + sifón',298007,'AISI 304 · 3,2 mm · 28,4 kg']]);
 barras('barsVol',[['MOD real por unidad · 200 u/año',230630,'2 operarios · 70 % de las horas pagadas'],['MOD real por unidad · 280 u/año',164736,'Los mismos 2 operarios · 98 %']]);
